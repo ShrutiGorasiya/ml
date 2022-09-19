@@ -1,0 +1,283 @@
+http://rentry.co/ml-20-9-internal
+
+===========================================Bayseian_Demo_===================================
+
+(
+Naïve Bayes algorithm is a supervised learning algorithm, which is based on 
+Bayes theorem and used for solving classification problems. 
+It is mainly used in text classification that includes a high-dimensional training dataset.
+)
+
+1>  import numpy as np
+import pandas as pd
+---------------------------------
+2>df=pd.read_csv('Air_Traffic.csv')
+df.head()
+---------------------------------
+3>x=df[["Days","Season","Fog","Rain"]]
+y=df["Season"].value_counts()
+y
+---------------------------------
+4>from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+ds=df.apply(le.fit_transform)
+ds.tail()
+---------------------------------
+5>df.tail()
+---------------------------------
+6>x=ds[["Days","Season","Fog","Rain"]]
+y=ds["Season"]
+y
+---------------------------------
+7>from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test=train_test_split(x, y, test_size=0.2)
+y_test
+---------------------------------
+8>from sklearn.naive_bayes import GaussianNB
+model=GaussianNB()
+---------------------------------
+9>model.fit(x_train,y_train)
+y_pred=model.predict(x_test)
+y_pred
+---------------------------------
+10>y_test
+---------------------------------
+11>my_test=np.array([[3,3,0,0]])
+x_test=my_test
+result=model.predict(my_test)
+result
+---------------------------------
+12>y.head()
+---------------------------------
+13>df.head()
+---------------------------------
+
+===========================================Bayseian_Demo_2===================================
+till 9th step same :
+---------------------------------
+from sklearn.metrics import confusion_matrix
+cm=confusion_matrix(y_pred, y_test)
+cm
+
+---------------------------------
+from sklearn.metrics import accuracy_score
+acs=accuracy_score(y_pred, y_test)*100
+acs
+---------------------------------
+y_test
+
+
+===========================================kNN_demo===================================
+(KNN is one of the simplest forms of machine learning algorithms mostly used for 
+classification. It classifies the data point on how its neighbor is classified.
+ KNN classifies the new data points based on the similarity measure of the earlier stored 
+data points. For example, if we have a dataset of tomatoes and bananas.)
+---------------------------------
+import numpy as np
+import pandas as pd
+---------------------------------
+df=pd.read_csv('iris.csv')
+df.head()
+---------------------------------
+x=df[["SepalLengthCm",	"SepalWidthCm",	"PetalLengthCm",	"PetalWidthCm"	]]
+y=df['Species']
+x.head()
+---------------------------------
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+y=le.fit_transform(y)
+y
+---------------------------------
+from sklearn.model_selection import train_test_split
+xtrain, xtest, ytrain, ytest=train_test_split(x,y, test_size=0.2, random_state=42)
+xtest
+---------------------------------
+from sklearn.neighbors import KNeighborsClassifier
+model=KNeighborsClassifier(n_neighbors=3, metric="euclidean")
+model.fit(xtrain, ytrain)
+---------------------------------
+ypred=model.predict(xtest)
+ypred
+---------------------------------
+from sklearn.metrics import confusion_matrix
+cm=confusion_matrix(ypred, ytest)
+cm
+---------------------------------
+
+
+===========================================Linear_regression===================================
+
+(Linear Regression is a machine learning algorithm based on supervised learning.
+ It performs a regression task. Regression models a target prediction value based on
+ independent variables. It is mostly used for finding out the relationship between 
+variables and forecasting.)
+---------------------------------
+import pandas as pd
+import numpy as np
+
+---------------------------------
+df=pd.read_csv('Salary_Data.csv')
+df.head()
+---------------------------------
+y=df['Salary'].values
+x=df['YearsExperience'].values
+---------------------------------
+y=y.reshape(len(y),1)
+y.shape
+---------------------------------
+x=x.reshape(len(x),1)
+x.shape
+---------------------------------
+from sklearn.model_selection import train_test_split
+xtrain,xtest, ytrain, ytest=train_test_split(x,y, test_size=0.2 )
+---------------------------------
+from sklearn.linear_model import LinearRegression
+lin_reg=LinearRegression()
+---------------------------------
+lin_reg.fit(xtrain, ytrain)
+---------------------------------
+## ypred=lin_reg.predict(xtest)
+ypred=lin_reg.predict([[12]])
+ypred
+
+
+===========================================Linear_regression(with regression line)===================================
+
+till last same
+-----------------------------
+ypred=lin_reg.predict(xtest)
+##ypred=lin_reg.predict([[15]])
+ypred
+
+---------------------------------
+### Regression line for Training samples
+import matplotlib.pyplot as plt
+plt.scatter(xtrain,ytrain, color='red', label='Actual Data')
+plt.scatter(xtrain, lin_reg.predict(xtrain), color='blue', label='Predicted Data')
+plt.plot(xtrain,lin_reg.predict(xtrain), '--', color='green', label='Line of Regression')
+plt.legend(loc='best')
+plt.show()
+---------------------------------
+### Regression line for Testing samples
+import matplotlib.pyplot as plt
+plt.scatter(xtest,ytest, color='red', label='Actual Data')
+plt.scatter(xtest, ypred, color='blue', label='Predicted Data')
+plt.plot(xtest,ypred, '--', color='green', label='Line of Regression')
+plt.legend(loc='best')
+plt.show()
+---------------------------------
+m=lin_reg.coef_
+print(m)
+---------------------------------
+b=lin_reg.intercept_
+print(b)
+---------------------------------
+new_y=m*15+b
+print(new_y)
+---------------------------------
+from sklearn.metrics import r2_score
+r2=r2_score(ytest,ypred)
+r2
+---------------------------------
+
+===========================================k_means_demo2===================================
+(
+What is K-means algorithm with example?
+K-Means Clustering is an unsupervised learning algorithm that is used to solve the 
+clustering problems in machine learning or data science.
+K-means clustering algorithm computes the centroids and iterates until we it
+ finds optimal centroid. It assumes that the number of clusters are already known.
+ It is also called flat clustering algorithm. The number of clusters identified from 
+data by algorithm is represented by 'K' in K-means
+)
+---------------------------------
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+---------------------------------
+df=pd.read_csv("Mall_Customers.csv")
+df.head()
+---------------------------------
+X=df.iloc[:, [3,4]].values
+X
+---------------------------------
+plt.scatter(X[:,0],X[:,1], color='black', label='data points')
+plt.xlabel('Income')
+plt.ylabel('Spending')
+plt.legend()
+plt.show()
+---------------------------------
+from sklearn.cluster import KMeans
+wcss=[]
+for i in range(1,11):
+  km=KMeans(n_clusters=i)
+  km.fit(X)
+  wcss.append(km.inertia_)
+---------------------------------
+print (wcss)
+---------------------------------
+plt.figure(figsize=(12,6))
+plt.plot(range(1,11), wcss)
+plt.plot(range(1,11),wcss, linewidth=2, color='red', marker='8')
+plt.xlabel('K values')
+plt.xticks(np.arange(1,11))
+plt.ylabel('wcss values')
+plt.show()
+---------------------------------
+df1=df[["Annual Income (k$)",	"Spending Score (1-100)"]]
+X=df1
+X.head()
+---------------------------------
+#df1=[]
+km1=KMeans(n_clusters=5)
+km1.fit(X)
+y=km1.predict(X)
+df1["label"]=y
+df1
+---------------------------------
+import seaborn as sns
+plt.figure(figsize=(12,6))
+sns.scatterplot(x='Annual Income (k$)', y='Spending Score (1-100)',hue="label",palette=['green','orange','brown','dodgerblue','red'], data=X, s=50)
+plt.xlabel('Annual Income')
+plt.ylabel('Spending score')
+plt.show()
+---------------------------------
+---------------------------------
+
+===========================================numpy_demo===================================
+import numpy as np
+n1=np.array([[10,20,30], [40,50,60]])
+n1
+print(n1.shape)
+---------------------------------
+n2=np.ones((2,3))
+n2
+---------------------------------
+import numpy as np
+n1=np.array([[10,20,30], [40,50,60]])
+n1
+print(n1.shape)
+---------------------------------
+n2=np.ones((2,3))
+n2
+---------------------------------
+n3=np.full((2,3),4)
+n3
+----------------------------------
+n4=np.arange(10,20)
+n4
+---------------------------------
+n11=np.array([10,20,30,40,50])
+n12=np.array([40,50,60,70,80])
+np.sum([n11,n12], axis=1)
+---------------------------------
+n11=np.array([10,20,30,40,50])
+n12=np.array([40,50,60,70,80])
+np.setdiff1d(n12,n11)
+---------------------------------
+n11=np.array([10,20,30,40,50])
+n11_new=n11/2
+n11_new
+---------------------------------
+
+
